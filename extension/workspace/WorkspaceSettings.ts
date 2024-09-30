@@ -366,7 +366,9 @@ export class WorkspaceSettings extends OutputChannel {
                 this.files.sections.add(entry);
               }
             } else {
+
               this.files[type].add(entry);
+
             }
 
             added = added + 1;
