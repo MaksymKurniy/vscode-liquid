@@ -1818,7 +1818,8 @@ export const schema = {
         "div",
         "footer",
         "header",
-        "section"
+        "section",
+        null
       ]
     },
     "text_alignment": {

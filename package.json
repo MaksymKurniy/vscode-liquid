@@ -27,7 +27,7 @@
     "url": "https://github.com/panoply/vscode-liquid/issues"
   },
   "engines": {
-    "vscode": "^1.81.0",
+    "vscode": "^1.87.0",
     "node": "v16.15.0"
   },
   "categories": [
@@ -1323,6 +1323,7 @@
     "build": "tsup --minify --onSuccess \"vsce package --no-dependencies\"",
     "dry": "vsce ls package --no-dependencies",
     "schema": "node ./scripts/schemas.cjs",
+    "package": "vsce package",
     "grammar": "node ./scripts/grammars.cjs"
   },
   "tsup": {
