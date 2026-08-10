@@ -490,6 +490,32 @@ export const schema = {
         }
       }
     },
+    "metaobject": {
+      "required": [
+        "metaobject_type"
+      ],
+      "type": "object",
+      "properties": {
+        "metaobject_type": {
+          "type": "string",
+          "title": "Metaobject Type",
+          "markdownDescription": "The type of metaobject to display in the picker. This should match the metaobject definition type created in the Shopify admin."
+        }
+      }
+    },
+    "metaobject_list": {
+      "required": [
+        "metaobject_type"
+      ],
+      "type": "object",
+      "properties": {
+        "metaobject_type": {
+          "type": "string",
+          "title": "Metaobject Type",
+          "markdownDescription": "The type of metaobject to display in the picker. This should match the metaobject definition type created in the Shopify admin."
+        }
+      }
+    },
     "settings": {
       "$comment": "Shared Section Schema $ref (references) and inserted dynamically via the JSON language server. When \"schema\" file globs are provided in liquidrc or workspace settings, the vscode extension will insert the additional schemas required",
       "type": "array",
@@ -721,6 +747,20 @@ export const schema = {
                 ],
                 "title": "Video URL",
                 "markdownDescription": "A setting of type `video_url` outputs a URL entry field. In addition to the [standard attributes](https://shopify.dev/themes/architecture/settings/input-settings#standard-attributes) of an input setting.\n\nWhen accessing the value of a video_url type setting, data is returned as one of the following:\n\n- A [string](https://shopify.dev/api/liquid/basics/types#string) that contains the entered URL.\n- `nil`, if nothing has been entered.\n\nAdditionally, there's access to the `id` and `type` (YouTube or Vimeo) of the video.\n\nFor example, assuming you're using [this video](https://www.youtube.com/watch?v=_9VUPq3SxOc) with the above setting, the following Liquid generates the following output:\n\n**Setting**\n\n```liquid\n\nID: {{ settings.product_description_video.id }}\nType: {{ settings.product_description_video.type }}\n\n```\n\n**Output**\n\n```\n\nID: _9VUPq3SxOc\nType: youtube\n\n```\n\n#\n\n---\n\n[Shopify Documentation](https://shopify.dev/themes/architecture/settings/input-settings#video_url)\n"
+              },
+              {
+                "enum": [
+                  "metaobject"
+                ],
+                "title": "Metaobject",
+                "markdownDescription": "A setting of type `metaobject` outputs a metaobject picker field that's automatically populated with the available metaobjects for the specified metaobject type. You can use these fields to capture a single metaobject selection.\n\nWhen accessing the value of a `metaobject` type setting, data is returned as a metaobject object.\n\n#\n\n---\n\n[Shopify Documentation](https://shopify.dev/themes/architecture/settings/input-settings#metaobject)\n"
+              },
+              {
+                "enum": [
+                  "metaobject_list"
+                ],
+                "title": "Metaobject List",
+                "markdownDescription": "A setting of type `metaobject_list` outputs a metaobject picker field that's automatically populated with the available metaobjects for the specified metaobject type. You can use these fields to capture multiple metaobject selections.\n\nWhen accessing the value of a `metaobject_list` type setting, data is returned as an array of metaobject objects.\n\n#\n\n---\n\n[Shopify Documentation](https://shopify.dev/themes/architecture/settings/input-settings#metaobject_list)\n"
               }
             ]
           }
@@ -760,7 +800,9 @@ export const schema = {
                 "article",
                 "liquid",
                 "video",
-                "video_url"
+                "video_url",
+                "metaobject",
+                "metaobject_list"
               ]
             }
           }
@@ -949,6 +991,38 @@ export const schema = {
               },
               "then": {
                 "$ref": "#/definitions/video_url"
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "type"
+                ],
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "metaobject"
+                  }
+                }
+              },
+              "then": {
+                "$ref": "#/definitions/metaobject"
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "type"
+                ],
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "metaobject_list"
+                  }
+                }
+              },
+              "then": {
+                "$ref": "#/definitions/metaobject_list"
               }
             }
           ]
@@ -1353,6 +1427,26 @@ export const schema = {
             }
           },
           {
+            "label": "Metaobject",
+            "markdownDescription": "A setting of type `metaobject` outputs a metaobject picker field that's automatically populated with the available metaobjects for the specified metaobject type. You can use these fields to capture a single metaobject selection.\n\nWhen accessing the value of a `metaobject` type setting, data is returned as a metaobject object.\n\n#\n\n---\n\n[Shopify Documentation](https://shopify.dev/themes/architecture/settings/input-settings#metaobject)\n",
+            "body": {
+              "type": "metaobject",
+              "metaobject_type": "$1",
+              "id": "$2",
+              "label": "${2/([^_]+)(_*)/${1:/capitalize}${2:+ }/g}$3"
+            }
+          },
+          {
+            "label": "Metaobject List",
+            "markdownDescription": "A setting of type `metaobject_list` outputs a metaobject picker field that's automatically populated with the available metaobjects for the specified metaobject type. You can use these fields to capture multiple metaobject selections.\n\nWhen accessing the value of a `metaobject_list` type setting, data is returned as an array of metaobject objects.\n\n#\n\n---\n\n[Shopify Documentation](https://shopify.dev/themes/architecture/settings/input-settings#metaobject_list)\n",
+            "body": {
+              "type": "metaobject_list",
+              "metaobject_type": "$1",
+              "id": "$2",
+              "label": "${2/([^_]+)(_*)/${1:/capitalize}${2:+ }/g}$3"
+            }
+          },
+          {
             "label": "Video URL",
             "markdownDescription": "A setting of type `video_url` outputs a URL entry field. In addition to the [standard attributes](https://shopify.dev/themes/architecture/settings/input-settings#standard-attributes) of an input setting.\n\nWhen accessing the value of a video_url type setting, data is returned as one of the following:\n\n- A [string](https://shopify.dev/api/liquid/basics/types#string) that contains the entered URL.\n- `nil`, if nothing has been entered.\n\nAdditionally, there's access to the `id` and `type` (YouTube or Vimeo) of the video.\n\nFor example, assuming you're using [this video](https://www.youtube.com/watch?v=_9VUPq3SxOc) with the above setting, the following Liquid generates the following output:\n\n**Setting**\n\n```liquid\n\nID: {{ settings.product_description_video.id }}\nType: {{ settings.product_description_video.type }}\n\n```\n\n**Output**\n\n```\n\nID: _9VUPq3SxOc\nType: youtube\n\n```\n\n#\n\n---\n\n[Shopify Documentation](https://shopify.dev/themes/architecture/settings/input-settings#video_url)\n",
             "body": {
@@ -1451,8 +1545,7 @@ export const schema = {
         "then": {
           "type": "object",
           "required": [
-            "type",
-            "name"
+            "type"
           ],
           "properties": {
             "name": {
@@ -1527,7 +1620,7 @@ export const schema = {
             "markdownDescription": "A list of default values for any settings you might want to populate. Each entry should include the setting name and the value."
           },
           "blocks": {
-            "type": "array",
+            "type": ["array", "object"],
             "markdownDescription": "A list of default blocks that you might want to include. Each entry should be an object with attributes of type and settings. The type attribute value should reflect the type of the block that you want to include, and the settings object should be in the same format as the settings attribute above.",
             "items": {
               "type": "object"
@@ -1565,7 +1658,7 @@ export const schema = {
             "markdownDescription": "A list of default values for any settings you might want to populate. Each entry should include the setting name and the value."
           },
           "blocks": {
-            "type": "array",
+            "type": ["array", "object"],
             "markdownDescription": "A list of default blocks that you might want to include. Each entry should be an object with attributes of type and settings. The type attribute value should reflect the type of the block that you want to include, and the settings object should be in the same format as the settings attribute above.",
             "items": {
               "type": "object"
@@ -1811,7 +1904,7 @@ export const schema = {
     "tag": {
       "title": "Tag",
       "markdownDescription": "By default, when Shopify renders a section, it’s wrapped in a `<div>` element with a unique id attribute:\n\n```html\n\n<div id=\"shopify-section-[id]\" class=\"shopify-section\">\n  <!-- Output of the section content -->\n</div>\n\n```\n\nIf you don’t want to use a `<div>`, then you can specify which kind of HTML element to use with the tag attribute. The following are the accepted values:\n\n- `article`\n- `aside`\n- `div`\n- `footer`\n- `header`\n- `section`\n\nFor example, the following schema settings returns the following output:\n\n**Example**\n\n```liquid\n\n{% schema %}\n{\n  \"name\": \"Slideshow\",\n  \"tag\": \"section\"\n}\n{% endschema %}\n\n```\n\n**Output**\n\n```html\n\n<section id=\"shopify-section-[id]\" class=\"shopify-section\">\n   <!-- Output of the section content -->\n</section>\n\n```\n\n#\n\n---\n\n[Shopify Documentation](https://shopify.dev/themes/architecture/sections/section-schema#tag)\n",
-      "type": "string",
+      "type": ["string", "null"],
       "enum": [
         "article",
         "aside",

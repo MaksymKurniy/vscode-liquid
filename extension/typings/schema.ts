@@ -48,6 +48,8 @@ declare type SchemaSpecializedInputSettings = (
   | 'url'
   | 'video'
   | 'video_url'
+  | 'metaobject'
+  | 'metaobject_list'
 )
 
 export type SchemaSettingTypes = SchemaBasicInputSettings | SchemaSpecializedInputSettings
@@ -356,6 +358,29 @@ export namespace Schema {
     accept: ['youtube' | 'vimeo'];
   }
 
+  /**
+   * Returns an metaobject object.
+   */
+  export interface Metaobject extends Common<'metaobject'> {
+    /**
+     * The type of metaobject to display in the picker.
+     * This should match the metaobject definition type created in the Shopify admin.
+     */
+    metaobject_type: string;
+  }
+
+  /**
+   * Returns an array of metaobject objects.
+   */
+  export interface MetaobjectList extends Common<'metaobject_list'> {
+    /**
+     * The type of metaobject to display in the picker.
+     * This should match the metaobject definition type created in the Shopify admin.
+     */
+    metaobject_type: string;
+  }
+
+
 }
 
 export type SchemaSettings = (
@@ -385,6 +410,8 @@ export type SchemaSettings = (
   | Schema.Url
   | Schema.Video
   | Schema.VideoUrl
+  | Schema.Metaobject
+  | Schema.MetaobjectList
 );
 
 export type SchemaSettingsData = (
